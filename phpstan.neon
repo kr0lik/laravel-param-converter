@@ -1,0 +1,18 @@
+includes:
+  - vendor/kr0lik/phpstan-rules/extensions/general-extension.neon
+
+parameters:
+    excludes_analyse:
+    ignoreErrors:
+        -
+            message: "#Missing @throws Illuminate\\\\Contracts\\\\Container\\\\BindingResolutionException annotation#"
+            path: src/ParamConverterServiceProvider.php
+        -
+            message: "#Useless @throws Psr\\\\Container\\\\NotFoundExceptionInterface annotation#"
+            path: src/ParamConverterServiceProvider.php
+        -
+            message: "#@throws with type .+ is not compatible with parent#"
+            path: src/Converter/RequestDataConverter.php
+        -
+            message: "#is never thrown in the corresponding try block#"
+            path: src/Converter/RequestDataConverter.php
