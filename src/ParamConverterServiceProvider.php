@@ -37,7 +37,7 @@ class ParamConverterServiceProvider extends ServiceProvider
 
     private function configPath(): string
     {
-        return __DIR__.'/../../config/param-converter.php';
+        return __DIR__.'/../config/param-converter.php';
     }
 
     private function registerParamConverter(): void
