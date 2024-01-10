@@ -1,0 +1,49 @@
+{
+  "name": "kr0lik/laravel-param-converter",
+  "description": "Symfony param converter with json serialization working in Laravel.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "krolik",
+      "email": "krolik@yandex.ru"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "laravel/framework": "^10.0",
+    "symfony/serializer": "^7.0",
+    "symfony/validator": "^7.0",
+    "symfony/property-access": "^7.0",
+    "symfony/property-info": "^7.0",
+    "sensio/framework-extra-bundle": "^6.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Kr0lik\\ParamConverter\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Kr0lik\\ParamConverter\\ParamConverterServiceProvider"
+      ]
+    }
+  },
+  "require-dev": {
+    "kr0lik/php-cs-fixer": "^2.0",
+    "kr0lik/phpstan-rules": "^2.0"
+  },
+  "config": {
+    "preferred-install": {
+      "*": "dist"
+    },
+    "bin-dir": "bin",
+    "sort-packages": true
+  }
+}
