@@ -24,6 +24,10 @@ use TypeError;
 class RequestDataConverter implements ParamConverterInterface
 {
     public const NAME = 'request_data_converter';
+    public const OPTION_SOURCE = 'source';
+    public const SOURCE_QUERY = 'query';
+    public const SOURCE_ALL = 'all';
+
     private const DISABLE_TYPE_ENFORCEMENT = true;
 
     public function __construct(
@@ -40,9 +44,14 @@ class RequestDataConverter implements ParamConverterInterface
     public function apply(Request $request, ParamConverter $configuration): bool
     {
         try {
-            $dto = $this->serializer->deserialize($request->getContent(), $configuration->class, JsonEncoder::FORMAT, [
-                AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => self::DISABLE_TYPE_ENFORCEMENT,
-            ]);
+            $dto = $this->serializer->denormalize(
+                $this->getData($request, $configuration->options),
+                $configuration->class,
+                JsonEncoder::FORMAT,
+                [
+                    AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => self::DISABLE_TYPE_ENFORCEMENT,
+                ]
+            );
         } catch (MissingConstructorArgumentsException $e) {
             if (0 === preg_match_all('#("\$([a-zA-Z0-9_]+)")+#Us', $e->getMessage(), $matches)) {
                 throw $e;
@@ -88,5 +97,19 @@ class RequestDataConverter implements ParamConverterInterface
     public function supports(ParamConverter $configuration): bool
     {
         return is_a($configuration->class, RequestDtoInterface::class, true);
+    }
+
+    /**
+     * @param array<string, string> $options
+     *
+     * @return array<string, mixed>
+     */
+    private function getData(Request $request, array $options): array
+    {
+        return match ($options[self::OPTION_SOURCE] ?? '') {
+            self::SOURCE_QUERY => $request->query->all(),
+            self::SOURCE_ALL => array_merge($request->query->all(), $request->request->all()),
+            default => $request->request->all(),
+        };
     }
 }

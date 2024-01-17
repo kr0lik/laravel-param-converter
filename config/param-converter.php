@@ -6,7 +6,7 @@ use Kr0lik\ParamConverter\Converter\RequestDataConverter;
 
 return [
     'request' => [
-        'autoConvert' => true,
+        'autoConvert' => false,
     ],
     'converters' => [
         RequestDataConverter::class,

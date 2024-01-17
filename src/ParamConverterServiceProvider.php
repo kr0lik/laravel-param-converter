@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Kr0lik\ParamConverter;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
