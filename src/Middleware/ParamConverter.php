@@ -78,8 +78,8 @@ class ParamConverter
 
         $this->manager->apply($request, $configurations);
 
-        foreach ($request->attributes->all() as $name => $class) {
-            $route->setParameter($name, $class);
+        foreach ($request->attributes->all() as $name => $value) {
+            $route->setParameter($name, $value);
         }
 
         return $next($request);

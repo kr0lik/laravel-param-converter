@@ -23,13 +23,15 @@ Add Config:
 declare(strict_types=1);
 
 use Kr0lik\ParamConverter\Converter\RequestDataConverter;
+use Kr0lik\ParamConverter\Converter\QueryParamConverter;
 
 return [
     'request' => [
         'autoConvert' => true,
     ],
     'converters' => [
-        RequestDataConverter::class,
+        RequestDataConverter::NAME => RequestDataConverter::class,
+        QueryParamConverter::NAME => QueryParamConverter::class,
     ],
 ];
 ```
@@ -60,10 +62,13 @@ final readonly class TextDto implements RequestDtoInterface
 Create action or controller:
 ```php
 <?php
+use Kr0lik\ParamConverter\Annotation\ParamConverter;
+
 class YourAction extends Controller
 {
+    #[ParamConverter('token', converter: QueryParamConverter::NAME)]
     #[ParamConverter("requestDto", class=TextDto::class)]
-    public function __invoke(TextDto $requestDto)
+    public function __invoke(string $token, TextDto $requestDto)
     {
         ....
     }
@@ -72,14 +77,13 @@ class YourAction extends Controller
 
 or
 
-Add annotation if in config set `autoConvert = false`:
+Add annotation if in config set `autoConvert = true`:
 ```php
 <?php
 use Kr0lik\ParamConverter\Annotation\ParamConverter;
 
 class YourAction extends Controller
 {
-    #[ParamConverter("requestDto", class=TextDto::class)]
     public function __invoke(TextDto $requestDto)
     {
         ....
