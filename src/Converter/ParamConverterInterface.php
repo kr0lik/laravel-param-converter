@@ -12,4 +12,6 @@ interface ParamConverterInterface
     public function apply(Request $request, ParamConverter $configuration): bool;
 
     public function supports(ParamConverter $configuration): bool;
+
+    public static function getName(): string;
 }

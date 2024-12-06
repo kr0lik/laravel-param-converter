@@ -7,16 +7,14 @@ namespace Kr0lik\ParamConverter\Annotation;
 use Attribute;
 
 #[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
-class ParamConverter
+class ResponseConverter
 {
     /**
      * @param array<string, mixed> $options
      */
     public function __construct(
-        public readonly string $name,
         public string $class = '',
         public array $options = [],
-        public bool $isOptional = false,
         public string $converter = ''
     ) {}
 }

@@ -20,12 +20,12 @@ use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
-class RequestDataSerializerFactory
+class DataSerializerFactory
 {
     /**
      * @throws BindingResolutionException
      */
-    public static function create(Application $app): RequestDataSerializer
+    public static function create(Application $app): DataSerializer
     {
         /** @var AnnotationReader $annotationReader */
         $annotationReader = $app->make(AnnotationReader::class);
@@ -74,7 +74,7 @@ class RequestDataSerializerFactory
         /** @var JsonEncoder $jsonEncoder */
         $jsonEncoder = $app->make(JsonEncoder::class);
 
-        return new RequestDataSerializer(
+        return new DataSerializer(
             normalizers: [
                 $dateTimeNormalizer,
                 $arrayDenormalizer,

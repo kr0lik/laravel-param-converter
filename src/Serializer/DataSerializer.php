@@ -6,4 +6,4 @@ namespace Kr0lik\ParamConverter\Serializer;
 
 use Symfony\Component\Serializer\Serializer;
 
-class RequestDataSerializer extends Serializer {}
+class DataSerializer extends Serializer {}

@@ -22,6 +22,8 @@ Add Config:
 
 declare(strict_types=1);
 
+use Kr0lik\ParamConverter\Converter\DtoResponseConverter;
+use Kr0lik\ParamConverter\Converter\JsonResponseConverter;
 use Kr0lik\ParamConverter\Converter\RequestDataConverter;
 use Kr0lik\ParamConverter\Converter\QueryParamConverter;
 
@@ -30,8 +32,10 @@ return [
         'autoConvert' => true,
     ],
     'converters' => [
-        RequestDataConverter::NAME => RequestDataConverter::class,
-        QueryParamConverter::NAME => QueryParamConverter::class,
+        RequestDataConverter::class,
+        QueryParamConverter::class,
+        DtoResponseConverter::class,
+        JsonResponseConverter::class,
     ],
 ];
 ```
@@ -63,12 +67,14 @@ Create action or controller:
 ```php
 <?php
 use Kr0lik\ParamConverter\Annotation\ParamConverter;
+use Kr0lik\ParamConverter\Annotation\ResponseConverter;
 
 class YourAction extends Controller
 {
-    #[ParamConverter('token', converter: QueryParamConverter::NAME)]
+    #[ParamConverter('token', converter: 'query_param')]
     #[ParamConverter("requestDto", class=TextDto::class)]
-    public function __invoke(string $token, TextDto $requestDto)
+    #[ResponseConverter(SomeDto::class, converter: 'json_response')]
+    public function __invoke(string $token, TextDto $requestDto): SomeDto
     {
         ....
     }
@@ -84,7 +90,7 @@ use Kr0lik\ParamConverter\Annotation\ParamConverter;
 
 class YourAction extends Controller
 {
-    public function __invoke(TextDto $requestDto)
+    public function __invoke(string $token, TextDto $requestDto): SomeDto
     {
         ....
     }

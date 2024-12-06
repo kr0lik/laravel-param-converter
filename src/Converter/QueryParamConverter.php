@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class QueryParamConverter implements ParamConverterInterface
 {
-    public const NAME = 'query_param';
     public const OPTIONAL_OPTION = 'optional';
 
     /**
@@ -37,6 +36,11 @@ class QueryParamConverter implements ParamConverterInterface
 
     public function supports(ParamConverter $configuration): bool
     {
-        return self::NAME === $configuration->converter;
+        return self::getName() === $configuration->converter || '' === $configuration->converter;
+    }
+
+    public static function getName(): string
+    {
+        return 'query_param';
     }
 }

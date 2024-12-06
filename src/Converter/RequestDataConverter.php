@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Kr0lik\ParamConverter\Annotation\ParamConverter;
 use Kr0lik\ParamConverter\Contract\RequestDtoInterface;
 use Kr0lik\ParamConverter\Exception\ValidationException;
-use Kr0lik\ParamConverter\Serializer\RequestDataSerializer;
+use Kr0lik\ParamConverter\Serializer\DataSerializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
@@ -23,7 +23,6 @@ use TypeError;
 
 class RequestDataConverter implements ParamConverterInterface
 {
-    public const NAME = 'request_data_converter';
     public const OPTION_SOURCE = 'source';
     public const SOURCE_QUERY = 'query';
     public const SOURCE_ALL = 'all';
@@ -31,7 +30,7 @@ class RequestDataConverter implements ParamConverterInterface
     private const DISABLE_TYPE_ENFORCEMENT = true;
 
     public function __construct(
-        private readonly RequestDataSerializer $serializer,
+        private readonly DataSerializer $serializer,
         private readonly ValidatorInterface $validator,
     ) {}
 
@@ -57,7 +56,7 @@ class RequestDataConverter implements ParamConverterInterface
                 throw $e;
             }
 
-            throw new ValidationException(array_map(static function (string $match): array { return [$match => 'is required.']; }, $matches[2] ?? []));
+            throw new ValidationException(array_map(static function (string $match): array { return [$match => 'is required.']; }, $matches[2]));
         } catch (InvalidArgumentException|NotNormalizableValueException $e) {
             if (0 === preg_match('#type\sof\sthe\s"([a-zA-Z0-9_]+)"\sattribute\sfor#', $e->getMessage(), $matches)) {
                 throw $e;
@@ -97,6 +96,11 @@ class RequestDataConverter implements ParamConverterInterface
     public function supports(ParamConverter $configuration): bool
     {
         return is_a($configuration->class, RequestDtoInterface::class, true);
+    }
+
+    public static function getName(): string
+    {
+        return 'request_data';
     }
 
     /**
