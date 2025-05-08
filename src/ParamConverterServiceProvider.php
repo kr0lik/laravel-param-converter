@@ -7,9 +7,10 @@ namespace Kr0lik\ParamConverter;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
+use Kr0lik\ParamConverter\Annotation\ResponseConverter;
 use Kr0lik\ParamConverter\Middleware\ParamConverter;
-use Kr0lik\ParamConverter\Serializer\RequestDataSerializer;
-use Kr0lik\ParamConverter\Serializer\RequestDataSerializerFactory;
+use Kr0lik\ParamConverter\Serializer\DataSerializer;
+use Kr0lik\ParamConverter\Serializer\DataSerializerFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -57,13 +58,14 @@ class ParamConverterServiceProvider extends ServiceProvider
 
         foreach ($router->getMiddlewareGroups() as $group => $middleware) {
             $router->pushMiddlewareToGroup($group, ParamConverter::class);
+            $router->pushMiddlewareToGroup($group, ResponseConverter::class);
         }
     }
 
     private function registerRequestDataSerializer(): void
     {
-        $this->app->singleton(RequestDataSerializer::class, static function (Application $app): RequestDataSerializer {
-            return RequestDataSerializerFactory::create($app);
+        $this->app->singleton(DataSerializer::class, static function (Application $app): DataSerializer {
+            return DataSerializerFactory::create($app);
         });
     }
 

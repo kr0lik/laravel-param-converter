@@ -76,7 +76,7 @@ class ParamConverter
             $configurations = $this->autoConfigure($reflection, $request, $configurations);
         }
 
-        $this->manager->apply($request, $configurations);
+        $this->manager->applyRequest($request, ...$configurations);
 
         foreach ($request->attributes->all() as $name => $value) {
             $route->setParameter($name, $value);
@@ -93,10 +93,13 @@ class ParamConverter
         $priority = 0;
 
         foreach ($this->config['converters'] ?? [] as $key => $converter) {
-            /** @var ParamConverterInterface $paramConverter */
             $paramConverter = $this->container->make($converter);
 
-            $this->manager->add($paramConverter, $priority, is_string($key) ? $key : null);
+            if (!$paramConverter instanceof ParamConverterInterface) {
+                continue;
+            }
+
+            $this->manager->addParamConverters($paramConverter, $priority);
 
             ++$priority;
         }
@@ -156,7 +159,7 @@ class ParamConverter
                     $configurations[$name] = $configuration;
                 }
 
-                if (null !== $class && null === $configurations[$name]->class) {
+                if (null !== $class && '' === $configurations[$name]->class) {
                     $configurations[$name]->class = $class;
                 }
             }
